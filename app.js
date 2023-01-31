@@ -5,30 +5,30 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-//set up router for each set of routes (index, user)
+//setup router for each set of routes 
+// importing from routes/ folder 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const blogsRouter = require('./routes/blogs');
 
 //instantiate the actual express app
-//const port = 3001;
 const app = express();
 
-
 // view engine setup
-//sets application settings (things we can access across application)
+// sets application settings. (things we can access across the application)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-//associating libraries with the app
-//adding middleware...
-//...(adding libraries that we can now use throughout application)
+//associating the libraries with the app
+// adding middleware 
+//(adding libraries that we can use throughout our application)
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-//for hosting static files: css, html, images, etc
-app.use(express.static(path.join(__dirname, 'public')));
+
+//for hosting static files: css, html, images etc. 
+app.use(express.static(path.join(__dirname, 'public'))); 
 
 //we bind (associate) the routers to routes in our application
 app.use('/', indexRouter);
@@ -53,6 +53,6 @@ app.use(function(err, req, res, next) {
 
 // app.listen(port, () => {
 //   console.log(`ExpressBlogger app listening on port ${port}`)
-// });
+// })
 
 module.exports = app;

@@ -44,11 +44,12 @@ const blogs = [
   },
 ];
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
+//GET users listing
+router.get('/', (req, res, next)=>{
   res.json({sucess: true, route: "blogs", message:"welcome to the blogs page"});
 });
 
+//GET all blogs
 router.get("/all", (req, res)=>{
   res.json({
       success: true,
@@ -56,6 +57,7 @@ router.get("/all", (req, res)=>{
   })
 });
 
+//GET single blog by title
 router.get("/single/:title", (req, res)=>{
   const foundBlog = blogs.find((blog)=>{
       return blog.title === req.params.title
@@ -66,6 +68,7 @@ router.get("/single/:title", (req, res)=>{
   })
 });
 
+//DELETE single blog
 router.delete("/delete/:title", (req, res)=>{
   const titleToDelete = req.params.title
   const indexOfTitle = blogs.findIndex((blog)=>{

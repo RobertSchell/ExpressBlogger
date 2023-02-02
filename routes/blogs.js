@@ -46,7 +46,7 @@ const blogs = [
   },
 ];
 
-//GET users listing
+//GET blogs listing
 router.get('/', (req, res, next)=>{
   res.json({sucess: true, route: "blogs", message:"welcome to the blogs page"});
 });
@@ -92,7 +92,7 @@ router.post("/create-one", (req, res) => {
     const author = req.body.author;
     const category = req.body.category;
 
-    //create userData object fields
+    //create blogData object fields
     const blogData = {
       title,
       text,
@@ -101,7 +101,7 @@ router.post("/create-one", (req, res) => {
       createdAt: new Date(),
       lastModified: new Date(),
     };
-    //pass user data object to our validate function
+    //pass blog data object to our validate function
     const blogDataCheck = validateBlogData(blogData);
 
     if (blogDataCheck.isValid === false) {

@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { validateBlogData } = require("../validation/blogs");
+const blogList = [];
 
 const blogs = [
   {
@@ -74,12 +76,103 @@ router.delete("/delete/:title", (req, res)=>{
   const indexOfTitle = blogs.findIndex((blog)=>{
       return blog.title === titleToDelete
   })
-
   blogs.splice(indexOfTitle, 1)
-
   res.json({
       success: true
   })
 });
+
+router.post("/create-one", (req, res) => {
+  //try block, for validation code
+  try {
+    // anticipate fields of our post request /create-one
+    // parse out request data to local variables
+    const title = req.body.title;
+    const text = req.body.text;
+    const author = req.body.author;
+    const category = req.body.category;
+
+    //create userData object fields
+    const blogData = {
+      title,
+      text,
+      author,
+      category,
+      createdAt: new Date(),
+      lastModified: new Date(),
+    };
+    //pass user data object to our validate function
+    const blogDataCheck = validateBlogData(blogData);
+
+    if (blogDataCheck.isValid === false) {
+			throw Error(blogDataCheck.message)
+    }
+
+    blogs.push(blogData);
+    console.log (blogDataCheck);
+    console.log("blogList ", blogs);
+
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+		// In the catch block, we always want to do 2 things: console.log the error and respond with an error object
+    console.log(error);
+    res.json({
+			success: false,
+			error: String(error)
+		});
+  }
+});
+
+router.put("/update-one/:title", (req, res)=>{
+  const titleToUpdate = req.params.title
+  const originalTitle = blogs.find((blog)=>{
+      return blog.title === titleToUpdate
+  })
+  const originalTitleIndex = blogs.findIndex((blog)=>{
+      return blog.title === titleToUpdate
+  })
+
+  if (!originalTitle) {
+      res.json({
+          success: false,
+          message: "Could not find title in blogs"
+      })
+      return
+  }
+
+  const updatedTitle = {}
+
+  if (req.body.title !== undefined){
+      updatedTitle.title = req.body.title
+  } else {
+      updatedTitle.title = originalTitle.title
+  }
+
+  if (req.body.text !== undefined){
+      updatedTitle.text = req.body.text
+  } else {
+      updatedTitle.text = originalTitle.text
+  }
+
+  if (req.body.author !== undefined){
+      updatedTitle.author = req.body.author
+  } else {
+      updatedTitle.author = originalTitle.author
+  }
+
+  if (req.body.category !== undefined){
+    updatedTitle.category = req.body.category
+} else {
+    updatedTitle.category = originalTitle.category
+}
+
+  blogs[originalTitleIndex] = updatedTitle
+
+  res.json({
+      success: true
+  })
+})
 
 module.exports = router;

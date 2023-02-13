@@ -107,29 +107,29 @@ router.get('/single/:_id', async function(req, res, next) {
 //   })
 // });
 
-router.delete('/delete/:_id', async function(req, res, next) {
-  const blogs = await db()
-  .collection('sample_blogs')
-  .find({id: req.params._id})
-  .deleteOne({id: req.params._id})
-  if (result.deletedCount === 1) {
-    console.log("Successfully deleted one document.");
-  } else {
-    console.log("No documents matched the query. Deleted 0 documents.");
-  }
-  // .toArray(function(err, result){
-  //     if (err) {
-  //       res.status(400).send("error fetching blogs")
-  //     } else {
-  //       res.json(result);
-  //     }
-  //   }); 
+// router.delete('/delete/:_id', async function(req, res, next) {
+//   const blogs = await db()
+//   .collection('sample_blogs')
+//   .find({id: req.params._id})
+//   .deleteOne({id: req.params._id})
+//   if (result.deletedCount === 1) {
+//     console.log("Successfully deleted one document.");
+//   } else {
+//     console.log("No documents matched the query. Deleted 0 documents.");
+//   }
+//   // .toArray(function(err, result){
+//   //     if (err) {
+//   //       res.status(400).send("error fetching blogs")
+//   //     } else {
+//   //       res.json(result);
+//   //     }
+//   //   }); 
 
-    res.json({
-      sucess:true,
-      blogs: blogs
-    });
-  });
+//     res.json({
+//       sucess:true,
+//       blogs: blogs
+//     });
+//   });
 
 
 //POST new blog

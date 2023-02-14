@@ -27,25 +27,6 @@ router.get('/', async function(req, res, next) {
   });
 
 
-  // router.get('/multi/:author', async function(req, res, next) {
-  //   const blogs = await db()
-  //   .collection('sample_blogs')
-  //   .find({author: req.params.author})
-  //   .sort({author: "Jim Author"})
-  //   .toArray(function(err, result){
-  //       if (err) {
-  //         res.status(400).send("error fetching blogs")
-  //       } else {
-  //         res.json(result);
-  //       }
-  //     }); 
-  
-  //     res.json({
-  //       sucess:true,
-  //       blogs: blogs
-  //     });
-  //   });
-
 //GET all blogs (limited to 5) could comment out line 33 to GET ALL using this route))
 router.get('/all', async function(req, res, next) {
   const blogs = await db()
@@ -302,5 +283,37 @@ router.post('/create-one', async function (req, res, next) {
 //       success: true
 //   })
 // })
+
+
+router.get('/get-multi', async function(req, res, next) {
+  // console.log(req.params.opt1)
+  const blogs = await db()
+  .collection('sample_blogs')
+  .find({title: { $in: [req.query.opt1,req.query.opt2,req.query.opt3]}})
+  .sort(
+    {title: 1, blogs: 1}
+  )
+  .toArray()
+    res.json({
+      success:true,
+      blogs: blogs
+    });
+});
+
+
+router.delete('/delete-multi', async function(req, res, next) {
+  const idsToDelete = req.body
+  
+  const deleteResult = await db().collection('sample_blogs').deleteMany({
+    id: {
+      $in: idsToDelete
+    }
+  })
+
+  res.json({
+    sucess:true,
+    deleteResult: deleteResult
+  });
+});
 
 module.exports = router;

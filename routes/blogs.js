@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const express = require('express');
 const router = express.Router();
 //const { validateBlogData } = require("../validation/blogs");
@@ -24,6 +25,26 @@ router.get('/', async function(req, res, next) {
       blogs: blogs
     });
   });
+
+
+  // router.get('/multi/:author', async function(req, res, next) {
+  //   const blogs = await db()
+  //   .collection('sample_blogs')
+  //   .find({author: req.params.author})
+  //   .sort({author: "Jim Author"})
+  //   .toArray(function(err, result){
+  //       if (err) {
+  //         res.status(400).send("error fetching blogs")
+  //       } else {
+  //         res.json(result);
+  //       }
+  //     }); 
+  
+  //     res.json({
+  //       sucess:true,
+  //       blogs: blogs
+  //     });
+  //   });
 
 //GET all blogs (limited to 5) could comment out line 33 to GET ALL using this route))
 router.get('/all', async function(req, res, next) {
@@ -95,7 +116,7 @@ router.get('/single/:_id', async function(req, res, next) {
   });
 
 
-// //DELETE single blog
+// DELETE single blog
 // router.delete("/delete/:title", (req, res)=>{
 //   const titleToDelete = req.params.title
 //   const indexOfTitle = blogs.findIndex((blog)=>{
@@ -180,6 +201,7 @@ router.post('/create-one', async function (req, res, next) {
   const blogs = await db()
   .collection('sample_blogs')
   .insertOne({
+    id: uuidv4(),
     title: req.body.title,
     text: req.body.text,
     author: req.body.author,
@@ -192,6 +214,42 @@ router.post('/create-one', async function (req, res, next) {
     blogs: blogs
   });
 });
+
+//POST with validation for email field
+// router.post('/create-one', async function (req, res, next) {
+//   try {
+//     const newBlog = {
+//       id: uuidv4(),
+//       title: req.body.title,
+//       text: req.body.text,
+//       author: req.body.author,
+//       email: req.body.email,
+//       category: req.body.category,
+//       createdAt: new Date(),
+//       lastModified: new Date(),
+//     };
+
+//     if (newBlog.email === undefined || !newBlog.email.split('@').length > 1) {
+
+//       res.json({
+//         success: false,
+//         message: "email invalid",
+//     });
+//   }
+//     const insertOpRes = await db().collection('blogs').insertOne(newBlog);
+
+//     res.json({
+//       success: true,
+//       newPost,
+//     });
+//   } catch (e) {
+//     console.log(typeof e);
+//     console.log(e);
+//     res.json({
+//     error: e.toString(),
+//     });
+//   }
+// });
 
 
 //Update single blog

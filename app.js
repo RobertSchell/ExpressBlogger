@@ -1,42 +1,96 @@
-//instantiate standard libraries
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+// var createError = require('http-errors');
+// var express = require('express');
+// var path = require('path');
+// var cookieParser = require('cookie-parser');
+// var logger = require('morgan');
+// //load environment variables from .env (.env is the default file)
+// require("dotenv").config();
 
-//loads the contents of config.env
-require("dotenv").config({path: './config.env'});
+// var { mongooseConnect } = require('./mongoose.js');
+// mongooseConnect();
+// //register routes.
+// //NOTE: notice how there is .js after index, this is because
+// // we exported the module as index. 
+// var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
 
-var { mongoConnect } = require('./mongo.js');
-mongoConnect();
+// var app = express();
 
-//setup router for each set of routes 
-// importing from routes/ folder 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const blogsRouter = require('./routes/blogs');
+// // view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
 
-//instantiate the actual express app
-const app = express();
+// //set up logger and cookie parser 
+// app.use(logger('dev'));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(cookieParser());
+
+// //allows use to load static files from public 
+// app.use(express.static(path.join(__dirname, 'public')));
+
+
+// //register routes 
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+// // app.use('/blogs', blogsRouter);
+
+// // catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//   next(createError(404));
+// });
+
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+//   // render the error page
+//   res.status(err.status || 500);
+//   //res.render('error');
+// });
+
+// module.exports = app;
+
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+//load environment variables from .env (.env is the default file)
+require("dotenv").config();
+
+
+//look in our .env file for PORT, if it's not there, default to 5002.
+const PORT = process.env.PORT || 5002;
+
+var { mongooseConnect } = require('./mongoose.js');
+mongooseConnect();
+//register routes.
+//NOTE: notice how there is .js after index, this is because
+// we exported the module as index. 
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var blogsRouter = require('./routes/blogs');
+
+var app = express();
 
 // view engine setup
-// sets application settings. (things we can access across the application)
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
-//associating the libraries with the app
-// adding middleware 
-//(adding libraries that we can use throughout our application)
+//set up logger and cookie parser 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//for hosting static files: css, html, images etc. 
-app.use(express.static(path.join(__dirname, 'public'))); 
+//allows use to load static files from public 
+app.use(express.static(path.join(__dirname, 'public')));
 
-//we bind (associate) the routers to routes in our application
+
+//register routes 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/blogs', blogsRouter);
@@ -55,10 +109,11 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+}); 
 
-// app.listen(port, () => {
-//   console.log(`ExpressBlogger app listening on port ${port}`)
-// })
+//only do this if you don't have a /bin directory
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port: ${PORT}`);
+// });
 
 module.exports = app;
